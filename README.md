@@ -37,6 +37,8 @@ First we must provide a quick lesson in PCB architecture around chips like the n
 pulsing here, however with this particular chip this is not ideal. Performing the glitch here would result in affecting other subsystems of the chip such as the radio and other voltage regulators, while we would like to isolate
 the CPU core. By analyzing the chips data sheet, we can see that decoupling capacitor DEC1 has a link to the CPU core. If we perform the glitch here it will only affect the CPU core. 
 
+![CPU](./images/pins.png)
+
 We will be using the Faultier, a raspberry pi pico-based fault injection platform, Hextree's GlitchTag, a breakout board of the nrfN52840qfn48 that provides easy access to DEC1 on the chip, and some jumper wires.
 The Faultier uses an n-channel MOSFET to perform the pulse by short-circuiting DEC1 to ground in what is called a "crow-bar" attack.
 
