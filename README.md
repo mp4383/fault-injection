@@ -40,7 +40,7 @@ the CPU core. By analyzing the chips data sheet, we can see that decoupling capa
 We will be using the Faultier, a raspberry pi pico-based fault injection platform, Hextree's GlitchTag, a breakout board of the nrfN52840qfn48 that provides easy access to DEC1 on the chip, and some jumper wires.
 The Faultier uses an n-channel MOSFET to perform the pulse by short-circuiting DEC1 to ground in what is called a "crow-bar" attack.
 
-![faultier](./local/faultier.png)
+![faultier](./images/faultier.png)
 
 The important inputs from the faultier will be:
 * Crowbar - we attach this to DEC1 and the MOSFET that after receiving a gate signal will be switched to ground, short circuiting and performing the glitch
