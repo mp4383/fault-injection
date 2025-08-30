@@ -3,12 +3,25 @@
 ## Voltage Fault Injection
 
 ### What is Voltage Fault Injection
+Voltage fault injection is a hardware attack technique where an attacker momentarily alters the supply voltage to induce faults in a system’s execution, often to bypass security checks or extract sensitive data.
+
 ![Voltage Fault Injection](./images/glitch-graph.png)
+
+```
+bool pw_valid = password_check();
+if (pw_valid) { // is 0 if false, 1 if true
+  // ... sensitive operation
+  printf("Your MFA Code is " + generate_auth_code());
+}
+```
+
+In the example above, the boolean pw_valid is essentially a bit-flip. 
+
 
 What can we do with Voltage Glitching?
 - Gain access to debugging features on locked chips
 - Bypass secure boot
-- Code execution]
+- Code execution
 
 ## Hardware - Where to start
 ### Ben Eater
