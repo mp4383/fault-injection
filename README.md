@@ -32,26 +32,28 @@ Here we have:
 
 There are other parameters, such as pulse strength/amplitude, that are usable however are out of scope for this exercise.
 
-### Glitching the nrfn52840
-First we must provide a quick lesson in PCB architecture around chips like the nrfN52. These types of chips receive power through VDD, Voltage Drain Drain. In some instances it is possible to perform voltage fault injection by
+### Glitching the nRF52840
+First we must provide a quick lesson in PCB architecture around chips like the nRF52840. These types of chips receive power through VDD, Voltage Drain Drain. In some instances it is possible to perform voltage fault injection by
 pulsing here, however with this particular chip this is not ideal. Performing the glitch here would result in affecting other subsystems of the chip such as the radio and other voltage regulators, while we would like to isolate
 the CPU core. By analyzing the chips data sheet, we can see that decoupling capacitor DEC1 has a link to the CPU core. If we perform the glitch here it will only affect the CPU core. 
 
 ![CPU](./images/pins.png)
 
-We will be using the Faultier, a raspberry pi pico-based fault injection platform, Hextree's GlitchTag, a breakout board of the nrfN52840qfn48 that provides easy access to DEC1 on the chip, and some jumper wires.
+We will be using the Faultier, a raspberry pi pico-based fault injection platform, Hextree's GlitchTag, a breakout board of the nRF52840that provides easy access to DEC1 on the chip, and some jumper wires.
 The Faultier uses an n-channel MOSFET to perform the pulse by short-circuiting DEC1 to ground in what is called a "crow-bar" attack.
 
 ![faultier](./images/faultier.png)
 
 The important inputs from the faultier will be:
 * Crowbar - we attach this to DEC1 and the MOSFET that after receiving a gate signal will be switched to ground, short circuiting and performing the glitch
-* MUX0 - this is what we will use as the trigger to power on and off the device
+* MUX0 - this is what we will use to power on and off the device
+* EXT0 - this is what we will use as the trigger
+
 
 ### Glitch Tag
-As mentioned above we will be glitching the nRF52840. The nRF52840 is a System-on-Chip (SoC) designed by Nordic Semiconductor for short-range wireless applications, featuring a multiprotocol 2.4 GHz radio and an ARM® Cortex™-M4F CPU. It supports a wide array of wireless protocols, including Bluetooth Low Energy (BLE), Thread, Zigbee, ANT, and proprietary 2.4 GHz, and is known for its advanced peripherals, ample memory (1MB Flash, 256KB RAM), and integrated security features like a cryptographic accelerator. Here is the code we will be flashing to the chip. It is simple deterministic code that **should** result in printing N at the end of all the nested loops. However, if we can successfully glitch the target, we will see "X" printed along with the flag.  
+As mentioned above we will be glitching the nRF52840. The nRF52840 is a System-on-Chip (SoC) designed by Nordic Semiconductor for short-range wireless applications, featuring a multiprotocol 2.4 GHz radio and an ARM® Cortex™-M4F CPU. It supports a wide array of wireless protocols, including Bluetooth Low Energy (BLE), Thread, Zigbee, ANT, and proprietary 2.4 GHz, and is known for its advanced peripherals, ample memory (1MB Flash, 256KB RAM), and integrated security features like a cryptographic accelerator. Here is the code we will be flashing to the chip. It is simple deterministic code that begins by sending a reset flag, then **should** result in printing N at the end of all the nested loops. However, if we can successfully glitch the target, we will see "X" printed along with the flag.  
 
-``` python
+```
 #define LOOP_LENGTH 100
 void glitch_target() {
     // R - Indicates device has reset
@@ -81,6 +83,8 @@ void glitch_target() {
 }
 ```
 
+### Wiring setup
+![Wiring](./images/wiring.png)
 
 ## Hardware - Where to start
 ### Ben Eater
